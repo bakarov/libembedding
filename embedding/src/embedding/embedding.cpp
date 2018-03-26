@@ -29,7 +29,6 @@ Embedding* Embedding::getInstance()
     {
         instance = new Embedding();
     }
-
     return instance;
 }
 
@@ -58,18 +57,30 @@ bool Embedding::contains(const VectorName& key, const EmbeddingMatrix& embedding
     return true;
 }
 
+EmbeddingMatrix Embedding::readEmbeddingMatrixFromStrings(const std::vector<std::string> &lines) {
+    EmbeddingMatrix embeddingMatrix;
+    for (auto line: lines) {
+        std::vector<string> splittedLine = splitString(line, ' ');
+        VectorName word = splittedLine[0];
+        Vector numbers;
+        std::transform(splittedLine.begin() + 1, splittedLine.end(), std::back_inserter(numbers),
+                       [](const std::string& str) { return std::stoi(str); });
+        int numbersSize = numbers.size();
+        setVectorSize(numbersSize);
+        embeddingMatrix[word] = numbers;
+    }
+    return embeddingMatrix;
+}
+
 EmbeddingMatrix Embedding::readEmbeddingMatrixFromFile(const std::string &filename) {
     std::ifstream inputFile(filename);
     std::string line;
     EmbeddingMatrix embeddingMatrix;
-
     if (inputFile.good()) {
         while (getline(inputFile, line)) {
             std::vector<string> splittedLine = splitString(line, ' ');
-
             VectorName word = splittedLine[0];
             Vector numbers;
-
             std::transform(splittedLine.begin() + 1, splittedLine.end(), std::back_inserter(numbers),
                            [](const std::string& str) { return std::stoi(str); });
             int numbersSize = numbers.size();

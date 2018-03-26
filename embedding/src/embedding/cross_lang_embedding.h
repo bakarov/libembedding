@@ -7,12 +7,21 @@ using namespace std;
 
 class CrossLangEmbedding: public Embedding {
 public:
-    CrossLangEmbedding(const std::string& filename, const std::string& sourceLanguage, const std::string& targetLanguage);
-    static CrossLangEmbedding* getInstance(const std::string& filename, const std::string& sourceLanguage, const std::string& targetLanguage);
-
+    CrossLangEmbedding(const std::string& filename,
+                       const std::vector<std::string> &sourceLines,
+                       const std::vector<std::string> &targetLines,
+                       const std::string& sourceLanguage,
+                       const std::string& targetLanguage);
+    static CrossLangEmbedding* getInstance(const std::string& filename,
+                                           const std::vector<std::string> &sourceLines,
+                                           const std::vector<std::string> &targetLines,
+                                           const std::string& sourceLanguage,
+                                           const std::string& targetLanguage);
     std::pair<EmbeddingMatrix, EmbeddingMatrix> readEmbeddingMatrixFromFile(const std::string &filename,
                                                                             const std::string &sourceLanguage,
                                                                             const std::string &targetLanguage);
+    std::pair<EmbeddingMatrix, EmbeddingMatrix> readEmbeddingMatrixFromStrings(const std::vector<std::string> &sourceLines,
+                                                                               const std::vector<std::string> &targetLines);
 
     void setEmbeddingMatrixByLanguage(const EmbeddingMatrix& embeddingMatrix, const std::string& language);
     const EmbeddingMatrix& getEmbeddingMatrixByLanguage(const std::string& language);
@@ -24,7 +33,6 @@ public:
     std::string getTargetLanguage();
 
     // Overrided functions from the Embedding superclass
-    EmbeddingMatrix readEmbeddingMatrixFromFile(const std::string &filename) const;
     bool contains(const VectorName& key, const EmbeddingMatrix& embeddingMatrix, const std::string& language) const;
     double getWordSimilarityValue(const std::string &A, const std::string &B, const std::string &language) const;
     Vector getSentenceVector(const std::string& text, const std::string& language) const;

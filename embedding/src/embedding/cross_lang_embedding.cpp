@@ -4,21 +4,31 @@ using namespace std;
 
 CrossLangEmbedding* CrossLangEmbedding::instance = nullptr;
 
-CrossLangEmbedding::CrossLangEmbedding(const std::string& filename, const std::string& sourceLanguage, const std::string& targetLanguage) : Embedding() {
-    std::pair<EmbeddingMatrix, EmbeddingMatrix> crossLangMatrices = readEmbeddingMatrixFromFile(filename,
-                                                                                                sourceLanguage,
-                                                                                                targetLanguage);
+CrossLangEmbedding::CrossLangEmbedding(const std::string& filename,
+                                       const std::vector<std::string> &sourceLines,
+                                       const std::vector<std::string> &targetLines,
+                                       const std::string& sourceLanguage,
+                                       const std::string& targetLanguage) : Embedding() {
+    std::pair<EmbeddingMatrix, EmbeddingMatrix> crossLangMatrices;
+    if (filename.empty()) {
+        crossLangMatrices = readEmbeddingMatrixFromStrings(sourceLines, targetLines);
+    } else {
+        crossLangMatrices = readEmbeddingMatrixFromFile(filename, sourceLanguage, targetLanguage);
+    }
     mSourceEmbeddingMatrix = crossLangMatrices.first;
     mTargetEmbeddingMatrix = crossLangMatrices.second;
     mSourceLanguage = sourceLanguage;
     mTargetLanguage = targetLanguage;
 }
 
-CrossLangEmbedding* CrossLangEmbedding::getInstance(const std::string& filename, const std::string& sourceLanguage, const std::string& targetLanguage)
-{
+CrossLangEmbedding* CrossLangEmbedding::getInstance(const std::string& filename,
+                                                        const std::vector<std::string> &sourceLines,
+                                                        const std::vector<std::string> &targetLines,
+                                                        const std::string& sourceLanguage,
+                                                        const std::string& targetLanguage)  {
     if (instance == 0)
     {
-        instance = new CrossLangEmbedding(filename, sourceLanguage, targetLanguage);
+        instance = new CrossLangEmbedding(filename, sourceLines, targetLines,sourceLanguage, targetLanguage);
     }
 
     return instance;
@@ -31,6 +41,12 @@ std::pair<EmbeddingMatrix, EmbeddingMatrix> CrossLangEmbedding::readEmbeddingMat
     std::string targetEmbeddingFilename = filename + "." + targetLanguage;
     return std::make_pair(Embedding::readEmbeddingMatrixFromFile(sourceEmbeddingFilename), Embedding::readEmbeddingMatrixFromFile(targetEmbeddingFilename));
 }
+
+
+std::pair<EmbeddingMatrix, EmbeddingMatrix> CrossLangEmbedding::readEmbeddingMatrixFromStrings(const std::vector<std::string> &sourceLines,
+                                                                           const std::vector<std::string> &targetLines) {
+    return std::make_pair(Embedding::readEmbeddingMatrixFromStrings(sourceLines), Embedding::readEmbeddingMatrixFromStrings(targetLines));
+};
 
 void CrossLangEmbedding::setEmbeddingMatrixByLanguage(const EmbeddingMatrix& embeddingMatrix, const std::string& language) {
     if (language == mSourceLanguage) {

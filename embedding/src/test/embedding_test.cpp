@@ -17,10 +17,12 @@ struct Fixture {
 BOOST_FIXTURE_TEST_CASE(embedding_test, Fixture) {
 
     // Primary initialization
-    std::string embeddingFileName = "data/embedding";
+    std::vector<std::string> sourceLines = {"кошка 1 2 3 3", "собака 3 4 5 8", "кошкособака 9 8 7 6"};
+    std::vector<std::string> targetLines = {"cat 1 2 3 4", "dog 3 4 5 7", "catdog 9 8 7 6"};
     std::string sourceLanguage = "ru";
     std::string targetLanguage = "en";
-    CrossLangEmbedding* testEmbedding = CrossLangEmbedding::getInstance(embeddingFileName, sourceLanguage, targetLanguage);
+    std::string embeddingFileName;
+    CrossLangEmbedding* testEmbedding = CrossLangEmbedding::getInstance(embeddingFileName, sourceLines, targetLines, sourceLanguage, targetLanguage);
 
     // Similarity between single words
     std::string wordCatEn = "cat";
@@ -51,7 +53,7 @@ BOOST_FIXTURE_TEST_CASE(embedding_test, Fixture) {
     std::vector<std::string> sourceDocument = {wordTestRu, wordTestRu, wordCatDogRu};
     std::vector<std::string> targetDocument = {wordCatDogEn, wordTestEn, wordTestEn};
     double threshold = 0.3;
-    const CrossLangEmbedding* testConstEmbedding = CrossLangEmbedding::getInstance(embeddingFileName, sourceLanguage, targetLanguage);
+    const CrossLangEmbedding* testConstEmbedding = CrossLangEmbedding::getInstance(embeddingFileName, sourceLines, targetLines, sourceLanguage, targetLanguage);
     ParaphraseSearch* paraphraseSearch = new ParaphraseSearch(*testConstEmbedding, sourceDocument, sourceLanguage);
     paraphraseSearch->setThreshold(threshold);
 
