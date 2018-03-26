@@ -30,3 +30,12 @@
 *.exe
 *.out
 *.app
+
+# User-specific stuff
+*/.idea/
+.DS_Store
+*/.DS_Store
+
+# CMake
+*/cmake-build-debug/
+*/cmake-build-release/
