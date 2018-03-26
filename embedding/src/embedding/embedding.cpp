@@ -73,19 +73,29 @@ EmbeddingMatrix Embedding::readEmbeddingMatrixFromStrings(const std::vector<std:
 }
 
 EmbeddingMatrix Embedding::readEmbeddingMatrixFromFile(const std::string &filename) {
+    bool gensimFormat = false; // TODO: Make a default argument
+
     std::ifstream inputFile(filename);
     std::string line;
+    int lineNumber = 0;
     EmbeddingMatrix embeddingMatrix;
     if (inputFile.good()) {
         while (getline(inputFile, line)) {
-            std::vector<string> splittedLine = splitString(line, ' ');
-            VectorName word = splittedLine[0];
-            Vector numbers;
-            std::transform(splittedLine.begin() + 1, splittedLine.end(), std::back_inserter(numbers),
-                           [](const std::string& str) { return std::stoi(str); });
-            int numbersSize = numbers.size();
-            setVectorSize(numbersSize);
-            embeddingMatrix[word] = numbers;
+            if (lineNumber == 0 and gensimFormat == true) {
+                std::vector<string> vocabSizeAndVectorSize = splitString(line, ' ');
+                setVocabSize(std::stoi(vocabSizeAndVectorSize[0]));
+                setVectorSize(std::stoi(vocabSizeAndVectorSize[1]));
+            } else {
+                std::vector<string> splittedLine = splitString(line, ' ');
+                VectorName word = splittedLine[0];
+                Vector numbers;
+                std::transform(splittedLine.begin() + 1, splittedLine.end(), std::back_inserter(numbers),
+                               [](const std::string &str) { return std::stoi(str); });
+                int numbersSize = numbers.size();
+                setVectorSize(numbersSize);
+                embeddingMatrix[word] = numbers;
+            }
+            lineNumber += 1;
         }
         inputFile.close();
     } else {
