@@ -1,2 +1,3 @@
-# cross-lang-paraphrases
-hse ml course project
+# Libembedding
+
+A tiny word embedding C++ library.
