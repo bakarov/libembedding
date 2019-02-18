@@ -30,7 +30,7 @@ public:
 
     double getVectorSimilarityValue(const Vector &A, const Vector &B) const;
 
-    virtual EmbeddingMatrix readEmbeddingMatrixFromFile(const std::string &filename);
+    virtual EmbeddingMatrix readEmbeddingMatrixFromFile(const std::string &filename, bool gensimFormat = false);
     virtual EmbeddingMatrix readEmbeddingMatrixFromStrings(const std::vector<std::string> &lines);
     virtual bool contains(const VectorName& key, const EmbeddingMatrix& embeddingMatrix) const;
     virtual double getWordSimilarityValue(const std::string &A, const std::string &B, const EmbeddingMatrix& embeddingMatrix) const;
