@@ -72,9 +72,7 @@ EmbeddingMatrix Embedding::readEmbeddingMatrixFromStrings(const std::vector<std:
     return embeddingMatrix;
 }
 
-EmbeddingMatrix Embedding::readEmbeddingMatrixFromFile(const std::string &filename) {
-    bool gensimFormat = false; // TODO: Make a default argument
-
+EmbeddingMatrix Embedding::readEmbeddingMatrixFromFile(const std::string &filename, bool gensimFormat) {
     std::ifstream inputFile(filename);
     std::string line;
     int lineNumber = 0;
