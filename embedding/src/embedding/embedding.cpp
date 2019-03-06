@@ -88,7 +88,7 @@ EmbeddingMatrix Embedding::readEmbeddingMatrixFromFile(const std::string &filena
                 VectorName word = splittedLine[0];
                 Vector numbers;
                 std::transform(splittedLine.begin() + 1, splittedLine.end(), std::back_inserter(numbers),
-                               [](const std::string &str) { return std::stoi(str); });
+                               [](const std::string &str) { return std::stod(str); });
                 int numbersSize = numbers.size();
                 setVectorSize(numbersSize);
                 embeddingMatrix[word] = numbers;
